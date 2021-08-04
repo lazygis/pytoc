@@ -1,0 +1,26 @@
+file format : IDRISI Raster A.1
+file title  : 
+data type   : real
+file type   : binary
+columns     : 64
+rows        : 64
+ref. system : spc83ma1
+ref. units  : m
+unit dist.  : 1.0000000
+min. X      : 228210.0000000
+max. X      : 230130.0000000
+min. Y      : 926450.0000000
+max. Y      : 928370.0000000
+pos'n error : unknown
+resolution  : unknown
+min. value  : 0.0000000
+max. value  : 789.1767578
+display min : 0.0000000
+display max : 789.1767578
+value units : categories
+value error : unknown
+flag value  : none
+flag def'n  : none
+legend cats : 0
+lineage     : This file was created by the DISTANCE module with the command line: 
+lineage     : D:\Lazy\Map_Comparison\workstation\1971_Built.rst*D:\Lazy\Map_Comparison\workstation\1971_Built_Distance.rst
