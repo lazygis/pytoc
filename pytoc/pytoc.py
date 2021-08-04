@@ -37,6 +37,7 @@ class TOC:
         else:
             self.presenceInY = 0
             self.totalNum = 0
+        self.thresholdLabel = np.array([])
 
     def calculate_TOC(self):
         # There is no origin point when the minimum threshold is the same as index minimum
@@ -72,12 +73,10 @@ class TOC:
 
         # self.correctCornerY = correctCorner(self.TOCX, self.TOCY, self.presenceInY)
     def format_coordinates(self):
-        self.TOCX = np.array(self.TOCX)
-        if(len(self.TOCX.shape)<2):
-            self.TOCX = self.TOCX.reshape((1, self.TOCX.shape[0]))
-        self.TOCY = np.array(self.TOCY)
-        if (len(self.TOCY.shape) < 2):
-            self.TOCY = self.TOCY.reshape((1, self.TOCY.shape[0]))
+        self.TOCX = np.array(self.TOCX).flatten()
+        self.TOCX = self.TOCX.reshape((1, self.TOCX.shape[0]))
+        self.TOCY = np.array(self.TOCY).flatten()
+        self.TOCY = self.TOCY.reshape((1, self.TOCY.shape[0]))
 
     def calculate_AUC(self):
         self.format_coordinates()
