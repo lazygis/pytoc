@@ -34,16 +34,18 @@ class TOC_paint:
         # plt.axis('auto')
         plt.axis([0, self.totalNum, 0, self.presenceInY])
         plt.gca().set_aspect(1 / plt.gca().get_data_ratio())
-    def addAll(self):
+    def addCurves(self):
         if (self.boolCorrectCorner):
             CorrectCornerText1 = plt.gca().text(0, self.presenceInY * 1.01, 'The ', color="black", fontsize=8)
             CorrectCornerText1.draw(plt.gca().figure.canvas.get_renderer())
             ex = CorrectCornerText1.get_window_extent()
+            print('first'+str(ex.width))
             t = transforms.offset_copy(
                 CorrectCornerText1.get_transform(), x=ex.width, units='dots')
             CorrectCornerText2 = plt.gca().text(0, self.presenceInY * 1.01, '★ ', color="red", fontsize=8, transform=t)
             CorrectCornerText2.draw(plt.gca().figure.canvas.get_renderer())
             ex = CorrectCornerText2.get_window_extent()
+            print('first'+str(ex.width))
             t = transforms.offset_copy(
                 CorrectCornerText2.get_transform(), x=ex.width, units='dots')
             plt.gca().text(0, self.presenceInY * 1.01, 'marks where False Alarms equals Misses.', color="black", fontsize=8,
@@ -52,10 +54,10 @@ class TOC_paint:
         if (self.boolUniform):
             l2 = plt.plot([0, self.totalNum], [0, self.presenceInY], ':', color="violet", label='Uniform')
         for i in range(self.TOCNum):
-            self.addOne(i, self.index_names[i])
+            self.__addOne(i, self.index_names[i])
     def paint(self):
         plt.show()
-    def addOne(self, index, Name, marker=None):
+    def __addOne(self, index, Name, marker=None):
         Xlist = self.TOC_list[index].TOCX
         Ylist = self.TOC_list[index].TOCY
         if(marker==None):
