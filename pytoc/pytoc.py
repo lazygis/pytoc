@@ -7,10 +7,12 @@ from matplotlib import colors as matpltColors
 # ---------- This part is for the painting class
 class TOC_paint:
     def __init__(self, TOC_list, index_names = None, boolUniform = False, boolCorrectCorner = False):
+        # To make one TOC read as a list
         if type(TOC_list) != list:
             self.TOC_list = [TOC_list]
         else:
             self.TOC_list = TOC_list
+        # if there is no name updated
         if index_names is None:
             self.index_names = ["TOC{0}".format(i+1) for i in range(len(self.TOC_list))]
         else:
@@ -34,18 +36,16 @@ class TOC_paint:
         # plt.axis('auto')
         plt.axis([0, self.totalNum, 0, self.presenceInY])
         plt.gca().set_aspect(1 / plt.gca().get_data_ratio())
-    def addCurves(self):
+    def paint(self):
         if (self.boolCorrectCorner):
             CorrectCornerText1 = plt.gca().text(0, self.presenceInY * 1.01, 'The ', color="black", fontsize=8)
             CorrectCornerText1.draw(plt.gca().figure.canvas.get_renderer())
             ex = CorrectCornerText1.get_window_extent()
-            print('first'+str(ex.width))
             t = transforms.offset_copy(
                 CorrectCornerText1.get_transform(), x=ex.width, units='dots')
             CorrectCornerText2 = plt.gca().text(0, self.presenceInY * 1.01, '★ ', color="red", fontsize=8, transform=t)
             CorrectCornerText2.draw(plt.gca().figure.canvas.get_renderer())
             ex = CorrectCornerText2.get_window_extent()
-            print('first'+str(ex.width))
             t = transforms.offset_copy(
                 CorrectCornerText2.get_transform(), x=ex.width, units='dots')
             plt.gca().text(0, self.presenceInY * 1.01, 'marks where False Alarms equals Misses.', color="black", fontsize=8,
@@ -55,8 +55,8 @@ class TOC_paint:
             l2 = plt.plot([0, self.totalNum], [0, self.presenceInY], ':', color="violet", label='Uniform')
         for i in range(self.TOCNum):
             self.__addOne(i, self.index_names[i])
-    def paint(self):
         plt.show()
+    ## This function is private to add cures to the painter
     def __addOne(self, index, Name, marker=None):
         Xlist = self.TOC_list[index].TOCX
         Ylist = self.TOC_list[index].TOCY
