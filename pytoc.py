@@ -38,18 +38,19 @@ class TOC_paint:
         plt.gca().set_aspect(1 / plt.gca().get_data_ratio())
     def paint(self):
         if (self.boolCorrectCorner):
-            CorrectCornerText1 = plt.gca().text(0, self.presenceInY * 1.01, 'The ', color="black", fontsize=8)
-            CorrectCornerText1.draw(plt.gca().figure.canvas.get_renderer())
-            ex = CorrectCornerText1.get_window_extent()
-            t = transforms.offset_copy(
-                CorrectCornerText1.get_transform(), x=ex.width, units='dots')
-            CorrectCornerText2 = plt.gca().text(0, self.presenceInY * 1.01, '★ ', color="red", fontsize=8, transform=t)
-            CorrectCornerText2.draw(plt.gca().figure.canvas.get_renderer())
-            ex = CorrectCornerText2.get_window_extent()
-            t = transforms.offset_copy(
-                CorrectCornerText2.get_transform(), x=ex.width, units='dots')
-            plt.gca().text(0, self.presenceInY * 1.01, 'marks where False Alarms equals Misses.', color="black", fontsize=8,
-                           transform=t)
+            # CorrectCornerText1 = plt.gca().text(0, self.presenceInY * 1.01, 'The ', color="black", fontsize=8)
+            # CorrectCornerText1.draw(plt.gca().figure.canvas.get_renderer())
+            # ex = CorrectCornerText1.get_window_extent()
+            # t = transforms.offset_copy(
+            #     CorrectCornerText1.get_transform(), x=ex.width, units='dots')
+            # CorrectCornerText2 = plt.gca().text(0, self.presenceInY * 1.01, '★ ', color="red", fontsize=8, transform=t)
+            # CorrectCornerText2.draw(plt.gca().figure.canvas.get_renderer())
+            # ex = CorrectCornerText2.get_window_extent()
+            # t = transforms.offset_copy(
+            #     CorrectCornerText2.get_transform(), x=ex.width, units='dots')
+            # plt.gca().text(0, self.presenceInY * 1.01, 'marks where False Alarms equals Misses.', color="black", fontsize=8,
+            #                transform=t)
+            plt.text(0, self.presenceInY * 1.01, 'The red star marks where False Alarms equals Misses.', color="black", fontsize=8)
             #     marks where Misses equals False Alarms.
         if (self.boolUniform):
             l2 = plt.plot([0, self.totalNum], [0, self.presenceInY], ':', color="violet", label='Uniform')
@@ -105,9 +106,9 @@ def AreaUnderCurve(listx, listy):
 
 # ---------- This part is the class for TOC curve ----------
 class TOC:
-    def __init__(self, booleanArray=None, indexArray=None, thresholds=None, maskArray=None, weightsArray=None):
-        self.booleanArray = booleanArray
-        self.indexArray = indexArray
+    def __init__(self, booleanArray, indexArray, thresholds, maskArray=None, weightsArray=None):
+        self.booleanArray = np.array(booleanArray).flatten()
+        self.indexArray = np.array(indexArray).flatten()
         self.thresholds = np.array(thresholds).flatten()
         if (maskArray is None):
             self.maskArray = np.ones_like(self.booleanArray)
@@ -161,6 +162,7 @@ class TOC:
             self.thresholdLabel = np.append(self.thresholdLabel, np.array(['end']))
         self.TOCY = np.array([self.TOCY])
         self.TOCX = np.array([self.TOCX])
+        self.calculate_AUC()
 
         # self.correctCornerY = correctCorner(self.TOCX, self.TOCY, self.presenceInY)
     def format_coordinates(self):
