@@ -1,5 +1,5 @@
 # PyTOC
-A Python library for generating Total Operating Characteristic (TOC) Curve.
+A Python library for generating Total Operating Characteristic (TOC) Curves.
 
 **The main features of this library are:**
 

@@ -1,0 +1,25 @@
+Metadata-Version: 2.1
+Name: pytoc
+Version: 0.0.2
+Summary: A Python library for generating Total Operating Characteristic (TOC) Curves.
+Home-page: https://github.com/lazygis/pytoc
+Author: Zhen Liu
+Author-email: zhenliu26@outlook.com
+License: UNKNOWN
+Description: # PyTOC
+        A Python library for generating Total Operating Characteristic (TOC) Curves.
+        
+        **The main features of this library are:**
+        
+        - It calculates all properties of TOC at once.
+        - It draws multiple TOC curves in one diagram.
+        ## Table of Contents
+        - [Quick start](#quick-start)
+        
+        
+        ## Quick start
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown

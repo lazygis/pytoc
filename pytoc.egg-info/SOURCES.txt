@@ -1,0 +1,9 @@
+README.md
+setup.py
+pytoc/__init__.py
+pytoc/pytoc.py
+pytoc.egg-info/PKG-INFO
+pytoc.egg-info/SOURCES.txt
+pytoc.egg-info/dependency_links.txt
+pytoc.egg-info/requires.txt
+pytoc.egg-info/top_level.txt
