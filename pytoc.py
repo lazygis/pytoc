@@ -7,26 +7,157 @@ from matplotlib import colors as matpltColors
 
 # ---------- This part is for the painting class
 class TOC_painter:
-    def __init__(self, TOC_list=[], color_list=[], marker_list=[], line_list=[], index_names=None, boolUniform=False, boolCorrectCorner=False):
+    def __init__(self, TOC_list=[], index_names=[], color_list=[], marker_list=[], line_list=[], boolUniform=False, boolCorrectCorner=False):
         # To make one TOC read as a list
         if type(TOC_list) != list:
             self.TOC_list = [TOC_list]
         else:
             self.TOC_list = TOC_list
-        # if there is no name updated
-        if index_names is None:
-            self.index_names = ["TOC{0}".format(i + 1) for i in range(len(self.TOC_list))]
+        if type(color_list) != list:
+            self.color_list = [color_list]
+        else:
+            self.color_list = color_list
+        if type(marker_list) != list:
+            self.marker_list = [marker_list]
+        else:
+            self.marker_list = marker_list
+        if type(line_list) != list:
+            self.line_list = [line_list]
+        else:
+            self.line_list = line_list
+        # to make one index name read as a list
+        if type(index_names) != list:
+            self.index_names = [index_names]
         else:
             self.index_names = index_names
-        first_TOC = self.TOC_list[0]
+        # if there is no name updated
+        self.totalNum = 0
+        self.presenceInY = 0
+        self.TOCNum=0
         self.curve_list = []
-        self.totalNum = first_TOC.TOCX[0, -1]
-        self.presenceInY = first_TOC.TOCY[0, -1]
-        self.TOCNum = len(self.TOC_list)
+        if(len(self.TOC_list)>0):
+            if len(self.index_names) == 0:
+                self.index_names = ["TOC{0}".format(i + 1) for i in range(len(self.TOC_list))]
+            if len(self.color_list) == 0:
+                self.color_list = ["" for _ in range(len(self.TOC_list))]
+            if len(self.marker_list) == 0:
+                self.marker_list = ["" for _ in range(len(self.TOC_list))]
+            if len(self.line_list) == 0:
+                self.line_list = ["-" for _ in range(len(self.TOC_list))]
+            for i in range(len(self.TOC_list)):
+                item_dic = {'TOCX':self.TOC_list[i].TOCX,
+                            'TOCY':self.TOC_list[i].TOCY,
+                            'threshold':self.TOC_list[i].thresholdLabel,
+                            'color':self.color_list[i],
+                            'marker':self.marker_list[i],
+                            'line':self.line_list[i],
+                            'name':self.index_names[i]}
+                self.curve_list.append(item_dic)
+            self.__update_status()
+
         self.boolUniform = boolUniform
         self.boolCorrectCorner = boolCorrectCorner
-        self.fig = plt.figure()
+        self.fig, self.ax = plt.subplots()
+
+    def __update_status(self):
+        self.TOCNum = len(self.curve_list)
+        if(self.TOCNum>0):
+            self.totalNum = self.curve_list[0]['TOCX'][0,-1]
+            self.presenceInY = self.curve_list[0]['TOCY'][0,-1]
+
+
+    ## This function is private to add cures to the painter
+    def __addOne(self, index):
+        Xlist = self.curve_list[index]['TOCX']
+        Ylist = self.curve_list[index]['TOCY']
+        color = self.curve_list[index]['color']
+        marker = self.curve_list[index]['marker']
+        line = self.curve_list[index]['line']
+        Name = self.curve_list[index]['name']
+        symbol = marker+line
+        if (len(color)==0):
+            plt.plot(Xlist[0, :], Ylist[0, :], symbol, label=Name, clip_on=False)
+        else:
+            plt.plot(Xlist[0, :], Ylist[0, :], symbol, color=color, label=Name, clip_on=False)
+        handles, labels = plt.gca().get_legend_handles_labels()
+        numCurve = len(handles)
+        # change the order of maximum and minimum
+        # in handles the order will always uniform, x1, x2
+        if (labels[0] == 'Uniform'):
+            order = list(range(1, numCurve))
+            order.extend([0])
+        else:
+            order = list(range(0, numCurve))
+        plt.gca().legend([handles[idx] for idx in order], [labels[idx] for idx in order], loc='center left',
+                         bbox_to_anchor=(1, 0.5))
+    def __format_coordinates(self, TOCX, TOCY):
+        TOCX = np.array(TOCX).flatten()
+        TOCX = TOCX.reshape((1, TOCX.shape[0]))
+        TOCY = np.array(TOCY).flatten()
+        TOCY = TOCY.reshape((1, TOCY.shape[0]))
+        return TOCX, TOCY
+
+    def add_correct_corner(self, index):
+        TOCX = self.curve_list[index]['TOCX']
+        TOCY = self.curve_list[index]['TOCY']
+        presenceInY = TOCY[0,-1]
+        bool_presence = (TOCX <= presenceInY).astype(int)
+        corner_index = bool_presence.sum() - 1
+        if (corner_index == TOCY.shape[1] - 1):
+            y_res = TOCX[0, -1]
+        else:
+            y_res = (TOCY[0, corner_index + 1] - TOCY[0, corner_index]) * 1.0 / (
+                        TOCX[0, corner_index + 1] - TOCX[0, corner_index]) * (presenceInY - TOCX[0, corner_index]) + \
+                    TOCY[0, corner_index] * 1.0
+        plt.plot(presenceInY, y_res, 'r*')
+    def add_all_correct_corner(self):
+        for i in range(self.TOCNum):
+            self.add_correct_corner(i)
+
+
+    def add_TOC(self, TOC, index_name=None, color='', marker='', line='-'):
+        self.__update_status()
+        if(index_name is None):
+            index_list = [j['name'] for j in self.curve_list]
+            for i in range(1,self.TOCNum+2):
+                if('TOC'+str(i) not in index_list):
+                    index_name = 'TOC'+str(i)
+                    break
+        item_dic = {'TOCX': TOC.TOCX,
+                    'TOCY': TOC.TOCY,
+                    'threshold': TOC.thresholdLabel,
+                    'color': color,
+                    'marker': marker,
+                    'line': line,
+                    'name': index_name}
+        self.curve_list.append(item_dic)
+        self.__update_status()
+
+
+
+    def add_TOC_coor(self, TOCX, TOCY, threshold=[], index_name=None, color='', marker='', line='-'):
+        self.__update_status()
+        if (index_name is None):
+            index_list = [j['name'] for j in self.curve_list]
+            for i in range(1, self.TOCNum + 2):
+                if ('TOC' + str(i) not in index_list):
+                    index_name = 'TOC' + str(i)
+                    break
+        TOCX, TOCY = self.__format_coordinates(TOCX, TOCY)
+        item_dic = {'TOCX': TOCX,
+                    'TOCY': TOCY,
+                    'threshold': threshold,
+                    'color': color,
+                    'marker': marker,
+                    'line': line,
+                    'name': index_name}
+        self.curve_list.append(item_dic)
+        self.__update_status()
+
+
+    def paint(self):
         ## draw grey areas
+        self.__update_status()
         cmap = matpltColors.ListedColormap('#e0e0e0')
         plt.tripcolor([self.totalNum - self.presenceInY, self.totalNum, self.totalNum], [0, 0, self.presenceInY],
                       [0, 1, 2], np.array([1, 1, 1]), edgecolor="k", lw=0,
@@ -40,79 +171,26 @@ class TOC_painter:
         # plt.axis('auto')
         plt.axis([0, self.totalNum, 0, self.presenceInY])
         plt.gca().set_aspect(1 / plt.gca().get_data_ratio())
-    def __update_status(self):
-        self.TOCNum = len(self.curve_list)
-        if(self.TOCNum>0):
-            self.totalNum = self.curve_list[0].TOCX[0,-1]
-            self.presenceInY = self.curve_list[0].TOCY[0,-1]
-
-    def paint(self):
         if (self.boolCorrectCorner):
-            # CorrectCornerText1 = plt.gca().text(0, self.presenceInY * 1.01, 'The ', color="black", fontsize=8)
-            # CorrectCornerText1.draw(plt.gca().figure.canvas.get_renderer())
-            # ex = CorrectCornerText1.get_window_extent()
-            # t = transforms.offset_copy(
-            #     CorrectCornerText1.get_transform(), x=ex.width, units='dots')
-            # CorrectCornerText2 = plt.gca().text(0, self.presenceInY * 1.01, '★ ', color="red", fontsize=8, transform=t)
-            # CorrectCornerText2.draw(plt.gca().figure.canvas.get_renderer())
-            # ex = CorrectCornerText2.get_window_extent()
-            # t = transforms.offset_copy(
-            #     CorrectCornerText2.get_transform(), x=ex.width, units='dots')
-            # plt.gca().text(0, self.presenceInY * 1.01, 'marks where False Alarms equals Misses.', color="black", fontsize=8,
-            #                transform=t)
             plt.text(0, self.presenceInY * 1.01, 'The red star marks where False Alarms equals Misses.', color="black",
                      fontsize=8)
-            #     marks where Misses equals False Alarms.
         if (self.boolUniform):
             l2 = plt.plot([0, self.totalNum], [0, self.presenceInY], ':', color="violet", label='Uniform')
+        ## draw curves
         for i in range(self.TOCNum):
-            self.__addOne(i, self.index_names[i])
+            self.__addOne(i)
         plt.show()
 
-    ## This function is private to add cures to the painter
-    def __addOne(self, index, Name, marker=None):
-        Xlist = self.TOC_list[index].TOCX
-        Ylist = self.TOC_list[index].TOCY
-        if (marker == None):
-            plt.plot(Xlist[0, :], Ylist[0, :], label=Name, picker=2, clip_on=False)
-        else:
-            plt.plot(Xlist[0, :], Ylist[0, :], marker + '-', label=Name, picker=2, clip_on=False)
-        handles, labels = plt.gca().get_legend_handles_labels()
-        numCurve = len(handles)
-        # change the order of maximum and minimum
-        # in handles the order will always uniform, x1, x2
-        if (labels[0] == 'Uniform'):
-            order = list(range(1, numCurve))
-            order.extend([0])
-        else:
-            order = list(range(0, numCurve))
-        # put the maximum line first, uniform and minimum at last
-        # order.insert(0,0)
-        # order.extend([1,2])
-        plt.gca().legend([handles[idx] for idx in order], [labels[idx] for idx in order], loc='center left',
-                         bbox_to_anchor=(1, 0.5))
 
-
-
-
-    def read_TOC_coor(self, TOCX, TOCY, thresholdLable=np.array([])):
-        self.TOCX = TOCX
-        self.TOCY = TOCY
-        self.thresholdLabel = thresholdLable
-        self.__format_coordinates()
-        self.presenceInY = self.TOCY[0, -1]
-        self.totalNum = self.TOCX[0, -1]
-
-
-def drawTOC(TOC_list):
-    ## if the input is only one TOC object, not list.
-    if type(TOC_list) != list:
-        TOC_list = [TOC_list]
-    first_TOC = TOC_list[0]
-    totalNum = first_TOC.TOCX[0, -1]
-    presenceInY = first_TOC.TOCX[0, -1]
-    TOCNum = len(TOC_list)
-    fig, ax = plt.plot()
+# def drawTOC(TOC_list):
+#     ## if the input is only one TOC object, not list.
+#     if type(TOC_list) != list:
+#         TOC_list = [TOC_list]
+#     first_TOC = TOC_list[0]
+#     totalNum = first_TOC.TOCX[0, -1]
+#     presenceInY = first_TOC.TOCX[0, -1]
+#     TOCNum = len(TOC_list)
+#     fig, ax = plt.plot()
 
 
 # ---------- This part is for the use functions for TOC curve
@@ -149,6 +227,11 @@ class TOC:
         self.totalNum = np.sum(self.weightsArray)
         ## calculate TOCX, TOCY, threshold labels, Y value of correctCorner, and AUC
         self.__calculate_TOC()
+    def summary(self):
+        print('The size of extent:', self.totalNum)
+        print('Abundance:',self.presenceInY)
+        print('AUC:',self.AUC)
+        print('The coordinate of point below top left corner:','({0},{1})'.format(self.presenceInY,self.correctCornerY))
 
     def __calculate_TOC(self):
         # There is no origin point when the minimum threshold is the same as index minimum
