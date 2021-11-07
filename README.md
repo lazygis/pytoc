@@ -44,11 +44,33 @@ If we initialize the function
 ```angular2html
 TOC_1 = TOC(booleanArray, indexArray, thresholds)
 ```
-It means all elements are put into the calculation and they all have the same weights.
+It means all elements are put into the calculation and they all have the same weights， which are 1.
 
 If we initialize the function
 ```angular2html
 TOC_1 = TOC(booleanArray, indexArray, thresholds, maskArray=maskArray)
 ```
-It means we only use the first, second, third, and fifth element to calculate TOC and they have the same weights, whcih are 1.
+It means we only use the first, second, third, and fifth element to calculate TOC and they have the same weights, which are 1.
 
+If we initialize the function
+```angular2html
+TOC_1 = TOC(booleanArray, indexArray, thresholds, weightsArray=weighsArray)
+```
+It means we use all elements for calulation and set different weights to elements.
+
+After Initializing TOC class, we can use summary function to get the properties of the TOC. It will show the size of extent, Abundance, AUC, and the coordinate of point below the top left corner.
+```angular2html
+TOC_1.summary()
+```
+Also, we can just call those properties like:
+```angular2html
+print("The size of extent:", TOC_1.totalNum)
+print("Abundance:", TOC_1.presenceInY)
+print("AUC:", TOC_1.AUC)
+print("The vertical coordinate of point below the top left corner:", TOC_1.correctCornerY)
+```
+### TOC_painter
+The other important class is TOC_painter. This class is to draw TOC curves. It supports to display multiple TOC curves  in one diagream. The initialization is
+```angular2html
+painter = TOC_painter(TOC_list=[TOC_1], index_names=['distance'], color_list=['r'], marker_list=['^'], line_list=['-'], boolUniform=False, boolCorrectCorner=False)
+```
