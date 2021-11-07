@@ -74,3 +74,12 @@ The other important class is TOC_painter. This class is to draw TOC curves. It s
 ```angular2html
 painter = TOC_painter(TOC_list=[TOC_1], index_names=['distance'], color_list=['r'], marker_list=['^'], line_list=['-'], boolUniform=False, boolCorrectCorner=False)
 ```
+Also, If there is only one TOC curve to show, we can just initilize it like:
+```angular2html
+painter = TOC_painter(TOC_list=1, index_name='distance', color_list='r', marker_list='^', line_list='-',  boolUniform=False, boolCorrectCorner=False)
+```
+First, let us go through all the parameters in the initialization function.
+- TOC_list: The TOC curve you want to show. It should be a list of TOC objects.
+- index_names: Names of TOC curves. They will be shown in the legend.
+- color_list: A list of colors corresponding to TOC curves. The color can be one character like 'r' (red), 'g'(green), 'b'(blue); a color word, like "aqua", "green"; or hexadecimal color notation, like "#1f77b4". The details are in the link.
+- marker_list: A list of markers corresponding to TOC curves. Markers can be "^" (triangle_up), "v" (triangle_down).add All possible markers are in the link. 
