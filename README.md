@@ -82,4 +82,6 @@ First, let us go through all the parameters in the initialization function.
 - TOC_list: The TOC curve you want to show. It should be a list of TOC objects.
 - index_names: Names of TOC curves. They will be shown in the legend.
 - color_list: A list of colors corresponding to TOC curves. The color can be one character like 'r' (red), 'g'(green), 'b'(blue); a color word, like "aqua", "green"; or hexadecimal color notation, like "#1f77b4". The details are in the link.
-- marker_list: A list of markers corresponding to TOC curves. Markers can be "^" (triangle_up), "v" (triangle_down).add All possible markers are in the link. 
+- marker_list: A list of marker types corresponding to TOC curves. Markers can be "^" (triangle_up), "v" (triangle_down).add All possible markers are in the link. 
+- line_list: A list of line types corresponding to TOC curves. It can be '-' (solid line), '--' (dashed line)
+- boolUniform: If true, A uniform TOC curve will be put in the diagram.
