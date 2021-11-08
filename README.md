@@ -129,6 +129,8 @@ x_coor and y_coor can be lists or arrays.If you don't want set any parameter and
 ```angular2html
 painter.add_TOC_coor(x_coor, y_coor)
 ```
+
+#### correctcorner
 #### Some tricks
 Becasue the painter is on the basis of Python library matplotlib, users can customize the diagram using matplotlib functions before painter.paint(). There are some tricks.
 1. Set x and y title
@@ -150,3 +152,36 @@ painter.paint()
 
 ## Example
 
+There is an example to read raster data to generate and display a TOC curve. In this case, we want to analyze the relationship between new disturbance and the distance to the existing disturbance.
+- Read Data: there is several python libaries to read raster data, like gdal, rasterio. Users can use what they prefer. The important step here is to convert the input data to data in the format of numpy.array
+```angular2html
+import matplotlib.pyplot as plt
+import rasterio
+from pytoc import TOC, TOC_painter
+
+## read raster file
+src_label = rasterio.open('data/1971_Built_Gain.rst')
+src_index = rasterio.open('data/Distance_1971_Built.rst')
+src_mask = rasterio.open('data/Nonbuilt_1971.rst')
+## convert inputs to numpy arrays
+label_array = np.array(src_label.read(1))
+index_array = np.array(src_index.read(1))
+mask_array = np.array(src_mask.read(1))
+```
+- Create TOC object: we want to every values in the index array as thresholds. so, we use np.unique to get unique values.
+```angular2html
+TOC_1 = TOC(label_array,index_array,np.unique(index_array),mask_array)
+```
+- Show TOC curves
+```angular2html
+new_paint = TOC_painter(TOC_1)
+new_paint.boolCorrectCorner=True
+new_paint.boolUniform=True
+new_paint.add_all_correct_corner()
+# new_paint.index_names = ['distance']
+plt.xlabel('Hits+False alarms (square km)')
+plt.ylabel('Hits (square km)')
+plt.xticks([0,1000,2000,3000,4096])
+plt.yticks([0,90,180,270,360,460])
+new_paint.paint()
+```
