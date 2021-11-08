@@ -73,10 +73,12 @@ print("The vertical coordinate of point below the top left corner:", TOC_1.corre
 The other important class is TOC_painter. This class is to draw TOC curves. It supports to display multiple TOC curves  in one diagream. The initialization is
 ```angular2html
 painter = TOC_painter(TOC_list=[TOC_1], index_names=['distance'], color_list=['r'], marker_list=['^'], line_list=['-'], boolUniform=False, boolCorrectCorner=False)
+painter.paint()
 ```
 Also, If there is only one TOC curve to show, we can just initilize it like:
 ```angular2html
-painter = TOC_painter(TOC_list=1, index_name='distance', color_list='r', marker_list='^', line_list='-',  boolUniform=False, boolCorrectCorner=False)
+painter = TOC_painter(TOC_list=TOC_1, index_name='distance', color_list='r', marker_list='^', line_list='-',  boolUniform=False, boolCorrectCorner=False)
+painter.paint()
 ```
 First, let us go through all the parameters in the initialization function.
 - TOC_list: The TOC curve you want to show. It should be a list of TOC objects.
@@ -84,4 +86,46 @@ First, let us go through all the parameters in the initialization function.
 - color_list: A list of colors corresponding to TOC curves. The color can be one character like 'r' (red), 'g'(green), 'b'(blue); a color word, like "aqua", "green"; or hexadecimal color notation, like "#1f77b4". The details are in the link.
 - marker_list: A list of marker types corresponding to TOC curves. Markers can be "^" (triangle_up), "v" (triangle_down).add All possible markers are in the link. 
 - line_list: A list of line types corresponding to TOC curves. It can be '-' (solid line), '--' (dashed line)
-- boolUniform: If true, A uniform TOC curve will be put in the diagram.
+- boolUniform: If true, a uniform TOC curve will be put in the diagram.
+- boolCorrectCorner: If True, there is a explanation text shown on the top of axes. "The red star marks where False Alarms equals Misses." It tells readers about the meaning of red stars in the diagram.
+
+If you don't want to set the properties when you initialize the painter, you can only initialize TOC_list, like
+```angular2html
+painter = TOC_painter(TOC_list=[TOC_1, TOC_2])
+painter.paint()
+```
+The default settings for those parameters will be:
+- index names will be "TOC1", "TOC2"...
+- color list will be set randomly.
+- marker will be non-marker.
+- line will be solid line.
+
+You can even initialize the object TOC_painter without any parameters, like
+```angular2html
+painter = TOC_painter()
+```
+and add TOC objects or coordinates before using paint() function
+
+There are two functions in the TOC_painter to add TOC curves to the painter. There are
+
+**add_TOC** and **add_TOC_coor**
+
+1. add_TOC is the function to add object TOC to the painter. 
+```angular2html
+painter.add_TOC(TOC_1, index_name=None, color='', marker='', line='-')
+```
+If you don't want set any parameter and use the default settings, you can also just
+```angular2html
+painter.add_TOC(TOC_1)
+```
+2. add_TOC_coor is the function to add TOC coordinates to the painter.
+
+It is designed to avoid unnessary generation of object TOC. Users can read TOC coordinates from files and show them use TOC_painter.
+```angular2html
+painter.add_TOC_coor(x_coor, y_coor, index_name=None, color='', marker='', line='-')
+```
+x_coor and y_coor can be lists or arrays.If you don't want set any parameter and use the default settings, you can also just
+```angular2html
+painter.add_TOC_coor(x_coor, y_coor)
+```
+
