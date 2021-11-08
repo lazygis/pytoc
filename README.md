@@ -8,6 +8,7 @@ A Python library for generating Total Operating Characteristic (TOC) Curves.
 ## Table of Contents
 - [Quick start](#quick-start)
 - [Usage](#usage)
+- [Example](#example)
 
 
 ## Quick start
@@ -83,9 +84,9 @@ painter.paint()
 First, let us go through all the parameters in the initialization function.
 - TOC_list: The TOC curve you want to show. It should be a list of TOC objects.
 - index_names: Names of TOC curves. They will be shown in the legend.
-- color_list: A list of colors corresponding to TOC curves. The color can be one character like 'r' (red), 'g'(green), 'b'(blue); a color word, like "aqua", "green"; or hexadecimal color notation, like "#1f77b4". The details are in the link.
-- marker_list: A list of marker types corresponding to TOC curves. Markers can be "^" (triangle_up), "v" (triangle_down).add All possible markers are in the link. 
-- line_list: A list of line types corresponding to TOC curves. It can be '-' (solid line), '--' (dashed line)
+- color_list: A list of colors corresponding to TOC curves. The color can be one character like 'r' (red), 'g'(green), 'b'(blue); a color word, like "aqua", "green"; or hexadecimal color notation, like "#1f77b4". The details are in the [link](https://matplotlib.org/stable/gallery/color/named_colors.html).
+- marker_list: A list of marker types corresponding to TOC curves. Markers can be "^" (triangle_up), "v" (triangle_down).All possible markers are in the [link](https://matplotlib.org/stable/api/markers_api.html). 
+- line_list: A list of line types corresponding to TOC curves. It can be '-' (solid line), '--' (dashed line). All possible line types are in the [link](https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.set_linestyle)
 - boolUniform: If true, a uniform TOC curve will be put in the diagram.
 - boolCorrectCorner: If True, there is a explanation text shown on the top of axes. "The red star marks where False Alarms equals Misses." It tells readers about the meaning of red stars in the diagram.
 
@@ -128,4 +129,24 @@ x_coor and y_coor can be lists or arrays.If you don't want set any parameter and
 ```angular2html
 painter.add_TOC_coor(x_coor, y_coor)
 ```
+#### Some tricks
+Becasue the painter is on the basis of Python library matplotlib, users can customize the diagram using matplotlib functions before painter.paint(). There are some tricks.
+1. Set x and y title
+```angular2html
+# init painter
+painter = TOC_painter(TOC_1)
+plt.xlabel('Hits+False alarms (square km)')
+plt.ylabel('Hits (square km)')
+painter.paint()
+```
+
+2. Change ticks of x and y axes
+```angular2html
+painter = TOC_painter(TOC_1)
+plt.xticks([0,1000,2000,3000,4000])
+plt.yticks([0, 100, 200, 300, 400])
+painter.paint()
+```
+
+## Example
 

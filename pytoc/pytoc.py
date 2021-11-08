@@ -109,7 +109,7 @@ class TOC_painter:
             y_res = (TOCY[0, corner_index + 1] - TOCY[0, corner_index]) * 1.0 / (
                         TOCX[0, corner_index + 1] - TOCX[0, corner_index]) * (presenceInY - TOCX[0, corner_index]) + \
                     TOCY[0, corner_index] * 1.0
-        plt.plot(presenceInY, y_res, 'r*')
+        plt.plot(presenceInY, y_res, 'r*',zorder=20)
     def add_all_correct_corner(self):
         for i in range(self.TOCNum):
             self.add_correct_corner(i)
