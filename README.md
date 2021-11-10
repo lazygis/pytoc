@@ -10,6 +10,8 @@ A Python library for generating Total Operating Characteristic (TOC) Curves.
 - [Usage](#usage)
   - [TOC](#toc)
   - [TOC_painter](#toc_painter)
+    - [add_TOC and add_TOC_coor](#add_TOC-and-add_TOC_coor)
+    - [add_correct_corner and add_all_correct_corner](#add_correct_corner-and-add_all_correct_corner)
 - [Example](#example)
 
 
@@ -111,7 +113,7 @@ and add TOC objects or coordinates before using paint() function
 
 There are two functions in the TOC_painter to add TOC curves to the painter. There are
 
-**add_TOC** and **add_TOC_coor**
+#### add_TOC and add_TOC_coor
 
 1. add_TOC is the function to add object TOC to the painter. 
 ```angular2html
@@ -132,7 +134,7 @@ x_coor and y_coor can be lists or arrays.If you don't want set any parameter and
 painter.add_TOC_coor(x_coor, y_coor)
 ```
 
-#### add_correct_corner() and add_all_correct_corner()
+#### add_correct_corner and add_all_correct_corner
 TOC_painter also provides functions to draw the point where the misses equals false alarms on the TOC curves. There are two functions to use.
 - add_correct_corner(): The function can show the correct corner for one TOC curve. The parameter in the function is the index of the TOC curve.
 ```angular2html
