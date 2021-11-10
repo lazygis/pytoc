@@ -130,7 +130,23 @@ x_coor and y_coor can be lists or arrays.If you don't want set any parameter and
 painter.add_TOC_coor(x_coor, y_coor)
 ```
 
-#### correctcorner
+#### add_correct_corner() and add_all_correct_corner()
+TOC_painter also provides functions to draw the point where the misses equals false alarms on the TOC curves. There are two functions to use.
+- add_correct_corner(): The function can show the correct corner for one TOC curve. The parameter in the function is the index of the TOC curve.
+```angular2html
+painter = TOC_painter([TOC_1, TOC_2])
+## show the correct corner for TOC_2, because 0 is for TOC_1 and 1 is for TOC_2
+painter.add_correct_corner(1)
+painter.paint()
+```
+- add_all_correct_corner(): The function can show all correct corners in the painter.
+```angular2html
+painter = TOC_painter([TOC_1, TOC_2])
+## show correct corners for all TOC curves
+painter.add_all_correct_corner()
+painter.paint()
+```
+
 #### Some tricks
 Becasue the painter is on the basis of Python library matplotlib, users can customize the diagram using matplotlib functions before painter.paint(). There are some tricks.
 1. Set x and y title
@@ -174,14 +190,19 @@ TOC_1 = TOC(label_array,index_array,np.unique(index_array),mask_array)
 ```
 - Show TOC curves
 ```angular2html
+## initialize TOC_painter class with only one TOC object
 new_paint = TOC_painter(TOC_1)
+## show explanation text for correct corners and draw a uniform curve
 new_paint.boolCorrectCorner=True
 new_paint.boolUniform=True
+## add all correct corners to curves
 new_paint.add_all_correct_corner()
-# new_paint.index_names = ['distance']
+## set text on horizontal and vertical axes
 plt.xlabel('Hits+False alarms (square km)')
 plt.ylabel('Hits (square km)')
+## set horizontal and vertical ticks
 plt.xticks([0,1000,2000,3000,4096])
 plt.yticks([0,90,180,270,360,460])
+## paint the diagram
 new_paint.paint()
 ```
