@@ -8,6 +8,8 @@ A Python library for generating Total Operating Characteristic (TOC) Curves.
 ## Table of Contents
 - [Quick start](#quick-start)
 - [Usage](#usage)
+  - [TOC](#toc)
+  - [TOC_painter](#toc-painter)
 - [Example](#example)
 
 
